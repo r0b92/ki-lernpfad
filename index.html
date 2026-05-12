@@ -1,0 +1,1322 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KI-Lernpfad 2025</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#0d0d12;--surface:#13131a;--card:#1a1a24;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);
+  --text:#e8e6f0;--muted:#8b899a;
+  --accent:#7c6cfc;--accent2:#3ecf8e;--accent3:#f59e0b;--accent4:#ec4899;
+  --glow:rgba(124,108,252,0.12);
+  --font:'Space Grotesk',system-ui,sans-serif;
+  --mono:'JetBrains Mono',monospace;
+}
+html,body{min-height:100vh;background:var(--bg);color:var(--text);font-family:var(--font);font-size:14px;}
+
+/* LAYOUT */
+.app{display:flex;min-height:100vh;}
+.sidebar{
+  width:220px;flex-shrink:0;background:var(--surface);
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;
+  position:sticky;top:0;height:100vh;overflow-y:auto;
+  padding:20px 0 16px;
+}
+.main{flex:1;padding:24px;overflow-x:hidden;max-width:960px;}
+
+/* SIDEBAR */
+.logo{padding:0 18px 20px;border-bottom:1px solid var(--border);margin-bottom:12px;}
+.logo h1{font-size:16px;font-weight:700;letter-spacing:-0.3px;}
+.logo h1 span{color:var(--accent);}
+.logo p{font-size:10px;color:var(--muted);margin-top:2px;}
+
+.nav-section{padding:0 10px;margin-bottom:4px;}
+.nav-label{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:0 8px;margin-bottom:6px;margin-top:10px;}
+.nav-item{
+  display:flex;align-items:center;gap:9px;
+  padding:8px 10px;border-radius:8px;
+  font-size:13px;color:var(--muted);
+  cursor:pointer;transition:all .15s;border:none;background:none;
+  width:100%;text-align:left;font-family:var(--font);
+}
+.nav-item:hover{background:var(--border);color:var(--text);}
+.nav-item.active{background:var(--glow);color:var(--accent);font-weight:600;}
+.nav-item .icon{font-size:14px;width:18px;text-align:center;}
+.nav-item .badge{
+  margin-left:auto;font-size:9px;padding:1px 6px;border-radius:10px;
+  background:rgba(124,108,252,0.2);color:var(--accent);font-family:var(--mono);
+}
+
+.sidebar-footer{margin-top:auto;padding:12px 18px 0;border-top:1px solid var(--border);}
+.xp-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.xp-label{font-size:10px;color:var(--muted);}
+.xp-val{font-size:12px;font-weight:700;color:var(--accent);font-family:var(--mono);}
+.xp-bar{height:4px;background:var(--border);border-radius:2px;overflow:hidden;}
+.xp-bar-fill{height:100%;background:linear-gradient(90deg,var(--accent),#5b4de0);border-radius:2px;transition:width .6s ease;}
+.streak-row{display:flex;align-items:center;gap:6px;margin-top:10px;font-size:12px;color:var(--muted);}
+.streak-num{font-weight:700;color:var(--accent3);}
+
+/* VIEWS */
+.view{display:none;}
+.view.active{display:block;}
+
+/* CARDS */
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;}
+.card+.card{margin-top:12px;}
+.card-title{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;display:flex;align-items:center;gap:7px;}
+.card-title .dot{width:6px;height:6px;border-radius:50%;}
+
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.grid-main{display:grid;grid-template-columns:1fr 300px;gap:16px;}
+
+/* STAT CARDS */
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;}
+.stat-label{font-size:10px;color:var(--muted);margin-bottom:5px;}
+.stat-val{font-size:22px;font-weight:700;line-height:1;}
+.stat-sub{font-size:10px;color:var(--muted);margin-top:3px;}
+.stat-bar{height:3px;background:var(--border);border-radius:2px;margin-top:8px;overflow:hidden;}
+.stat-bar-fill{height:100%;border-radius:2px;transition:width .8s ease;}
+
+/* PHASE ITEMS */
+.phase-list{display:flex;flex-direction:column;gap:8px;}
+.phase-item{
+  display:flex;align-items:flex-start;gap:11px;
+  padding:11px 12px;border-radius:9px;
+  border:1px solid var(--border);background:var(--surface);
+  cursor:pointer;transition:all .2s;position:relative;
+}
+.phase-item:hover{border-color:var(--border2);}
+.phase-item.current{border-color:var(--accent);background:rgba(124,108,252,0.05);}
+.phase-item.done{border-color:rgba(62,207,142,0.3);}
+.phase-item.done::after{content:"✓";position:absolute;right:11px;top:11px;color:var(--accent2);font-weight:700;font-size:12px;}
+.phase-num{
+  width:26px;height:26px;border-radius:7px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:700;background:var(--border);
+}
+.phase-item.current .phase-num{background:var(--accent);color:#fff;}
+.phase-item.done .phase-num{background:rgba(62,207,142,0.2);color:var(--accent2);}
+.phase-title{font-size:13px;font-weight:600;margin-bottom:2px;}
+.phase-sub{font-size:11px;color:var(--muted);line-height:1.4;}
+.phase-tag{
+  display:inline-block;margin-top:5px;
+  font-size:9px;padding:2px 7px;border-radius:4px;
+  font-weight:600;font-family:var(--mono);
+}
+
+/* PROGRESS BARS */
+.prog-row{display:flex;align-items:center;gap:10px;margin-bottom:9px;}
+.prog-label{font-size:11px;color:var(--muted);width:110px;flex-shrink:0;}
+.prog-bar{flex:1;height:5px;background:var(--border);border-radius:3px;overflow:hidden;}
+.prog-fill{height:100%;border-radius:3px;transition:width .8s ease;}
+.prog-pct{font-size:10px;font-family:var(--mono);color:var(--muted);width:28px;text-align:right;}
+
+/* TASKS */
+.task-item{
+  display:flex;align-items:flex-start;gap:9px;
+  padding:8px 10px;border-radius:8px;
+  border:1px solid var(--border);background:var(--surface);
+  margin-bottom:6px;cursor:pointer;transition:all .15s;
+}
+.task-item:hover{border-color:var(--border2);}
+.task-item.done{opacity:.5;}
+.task-item.done .task-text{text-decoration:line-through;color:var(--muted);}
+.task-cb{
+  width:16px;height:16px;border-radius:4px;flex-shrink:0;margin-top:1px;
+  border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;
+  font-size:10px;transition:all .15s;
+}
+.task-item.done .task-cb{background:var(--accent2);border-color:var(--accent2);color:#fff;}
+.task-text{font-size:12px;line-height:1.45;}
+.task-tag{font-size:9px;color:var(--muted);font-family:var(--mono);margin-top:2px;}
+
+/* QUIZ */
+.quiz-wrap{max-width:560px;}
+.quiz-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+.quiz-card{
+  background:linear-gradient(135deg,rgba(124,108,252,0.08),rgba(62,207,142,0.04));
+  border:1px solid rgba(124,108,252,0.25);border-radius:12px;padding:16px;
+}
+.quiz-q{font-size:14px;font-weight:600;line-height:1.5;margin-bottom:14px;}
+.quiz-options{display:flex;flex-direction:column;gap:6px;}
+.quiz-opt{
+  padding:9px 12px;border-radius:8px;border:1px solid var(--border);
+  background:var(--surface);cursor:pointer;font-size:13px;
+  transition:all .15s;text-align:left;font-family:var(--font);color:var(--text);
+  width:100%;
+}
+.quiz-opt:hover:not(:disabled){border-color:var(--accent);background:var(--glow);}
+.quiz-opt.correct{border-color:var(--accent2)!important;background:rgba(62,207,142,0.08)!important;}
+.quiz-opt.wrong{border-color:var(--accent4)!important;background:rgba(236,72,153,0.08)!important;}
+.quiz-feedback{
+  margin-top:10px;padding:10px;border-radius:8px;
+  font-size:12px;line-height:1.5;
+}
+.quiz-feedback.pos{background:rgba(62,207,142,0.08);color:var(--accent2);}
+.quiz-feedback.neg{background:rgba(236,72,153,0.07);color:#f472b6;}
+.quiz-nav{display:flex;align-items:center;justify-content:space-between;margin-top:12px;}
+.dots{display:flex;gap:4px;}
+.dot-item{width:7px;height:7px;border-radius:50%;background:var(--border);transition:background .3s;}
+.dot-item.done{background:var(--accent2);}
+.dot-item.current{background:var(--accent);}
+
+/* BUTTONS */
+.btn{
+  padding:7px 14px;border-radius:8px;border:1px solid var(--border);
+  background:var(--card);cursor:pointer;font-family:var(--font);
+  font-size:13px;color:var(--text);transition:all .15s;
+}
+.btn:hover{border-color:var(--border2);}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600;}
+.btn.primary:hover{background:#6b5de0;border-color:#6b5de0;}
+.btn.sm{padding:5px 10px;font-size:12px;}
+
+/* RESOURCES */
+.res-item{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 11px;border-radius:8px;
+  border:1px solid var(--border);background:var(--surface);
+  margin-bottom:7px;cursor:pointer;text-decoration:none;
+  color:var(--text);transition:all .15s;
+}
+.res-item:hover{border-color:var(--border2);transform:translateX(2px);}
+.res-icon{
+  width:30px;height:30px;border-radius:7px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:14px;
+}
+.res-name{font-size:12px;font-weight:500;}
+.res-tag{font-size:10px;color:var(--muted);}
+.res-arrow{margin-left:auto;color:var(--muted);font-size:11px;}
+
+/* WEEK GRID */
+.week-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-bottom:12px;}
+.day-col{text-align:center;}
+.day-lbl{font-size:9px;color:var(--muted);margin-bottom:5px;text-transform:uppercase;}
+.day-dot{
+  width:100%;aspect-ratio:1;border-radius:7px;
+  background:var(--border);transition:all .2s;
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;cursor:pointer;
+}
+.day-dot.done{background:rgba(62,207,142,0.2);color:var(--accent2);}
+.day-dot.today{background:rgba(124,108,252,0.2);border:1px solid var(--accent);}
+
+/* CALLOUT */
+.callout{
+  padding:9px 12px;border-left:2px solid var(--accent);
+  background:var(--glow);border-radius:0 8px 8px 0;
+  font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:12px;
+}
+
+/* NOTES */
+.notes-area{
+  width:100%;min-height:140px;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:9px;padding:12px;
+  font-family:var(--mono);font-size:12px;color:var(--text);
+  resize:vertical;outline:none;transition:border .15s;line-height:1.6;
+}
+.notes-area:focus{border-color:var(--border2);}
+.notes-area::placeholder{color:var(--muted);}
+.notes-saved{font-size:10px;color:var(--accent2);font-family:var(--mono);opacity:0;transition:opacity .3s;}
+
+/* ROADMAP DETAIL */
+.phase-detail-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;padding:12px;margin-bottom:10px;
+}
+.week-header{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px;font-family:var(--mono);}
+.week-tasks{font-size:11px;line-height:1.9;color:var(--muted);}
+
+/* MODAL */
+.modal-overlay{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);
+  z-index:100;align-items:center;justify-content:center;
+  backdrop-filter:blur(4px);
+}
+.modal-overlay.open{display:flex;}
+.modal{
+  background:var(--card);border:1px solid var(--border2);
+  border-radius:14px;padding:22px;max-width:400px;width:90%;
+  animation:modalIn .2s ease;
+}
+@keyframes modalIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+.modal-title{font-size:16px;font-weight:700;margin-bottom:6px;}
+.modal-body{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:16px;}
+
+/* SETTINGS */
+.setting-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 0;border-bottom:1px solid var(--border);
+}
+.setting-row:last-child{border-bottom:none;}
+.setting-label{font-size:13px;}
+.setting-sub{font-size:11px;color:var(--muted);margin-top:1px;}
+.toggle{
+  width:36px;height:20px;background:var(--border);border-radius:10px;
+  cursor:pointer;position:relative;transition:background .2s;border:none;
+}
+.toggle::after{
+  content:'';position:absolute;width:14px;height:14px;border-radius:7px;
+  background:var(--text);top:3px;left:3px;transition:left .2s;
+}
+.toggle.on{background:var(--accent);}
+.toggle.on::after{left:19px;}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+
+/* PAGE HEADER */
+.page-header{margin-bottom:20px;}
+.page-header h2{font-size:18px;font-weight:700;}
+.page-header p{font-size:12px;color:var(--muted);margin-top:3px;}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .sidebar{display:none;}
+  .main{padding:16px;}
+  .grid-2,.grid-3,.grid-main{grid-template-columns:1fr;}
+  .mobile-nav{display:flex!important;}
+}
+.mobile-nav{
+  display:none;position:fixed;bottom:0;left:0;right:0;
+  background:var(--surface);border-top:1px solid var(--border);
+  padding:8px;gap:4px;z-index:50;
+}
+.mobile-nav-btn{
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;
+  padding:6px 4px;border-radius:8px;cursor:pointer;border:none;background:none;
+  font-family:var(--font);font-size:9px;color:var(--muted);transition:all .15s;
+}
+.mobile-nav-btn.active{color:var(--accent);}
+.mobile-nav-btn .mn-icon{font-size:16px;}
+</style>
+</head>
+<body>
+
+<div class="app">
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="logo">
+    <h1>KI<span>·</span>Pfad</h1>
+    <p>Von Anfänger zum Profi</p>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Lernen</div>
+    <button class="nav-item active" onclick="show('overview')">
+      <span class="icon">🗺</span> Übersicht
+    </button>
+    <button class="nav-item" onclick="show('roadmap')">
+      <span class="icon">📍</span> Roadmap
+    </button>
+    <button class="nav-item" onclick="show('weekly')">
+      <span class="icon">📅</span> Wochenplan
+    </button>
+    <button class="nav-item" onclick="show('tasks')">
+      <span class="icon">✅</span> Aufgaben
+      <span class="badge" id="tasks-badge">4</span>
+    </button>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Üben</div>
+    <button class="nav-item" onclick="show('quiz')">
+      <span class="icon">🧠</span> Quiz
+    </button>
+    <button class="nav-item" onclick="show('notes')">
+      <span class="icon">📝</span> Notizen
+    </button>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Entdecken</div>
+    <button class="nav-item" onclick="show('resources')">
+      <span class="icon">📚</span> Ressourcen
+    </button>
+    <button class="nav-item" onclick="show('glossary')">
+      <span class="icon">🔤</span> Glossar
+    </button>
+  </div>
+
+  <div class="nav-section">
+    <button class="nav-item" onclick="show('settings')">
+      <span class="icon">⚙️</span> Einstellungen
+    </button>
+  </div>
+
+  <div class="sidebar-footer">
+    <div class="xp-row">
+      <span class="xp-label">⚡ XP</span>
+      <span class="xp-val" id="xp-display">0 / 1000</span>
+    </div>
+    <div class="xp-bar"><div class="xp-bar-fill" id="xp-bar" style="width:0%"></div></div>
+    <div class="streak-row">🔥 Streak: <span class="streak-num" id="streak-display">0</span> Tage</div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="main">
+
+<!-- ===== ÜBERSICHT ===== -->
+<div id="view-overview" class="view active">
+  <div class="page-header">
+    <h2>Guten Morgen! 👋</h2>
+    <p id="date-display">Lade...</p>
+  </div>
+
+  <div class="grid-3" style="margin-bottom:14px">
+    <div class="stat">
+      <div class="stat-label">Gesamtfortschritt</div>
+      <div class="stat-val" style="color:var(--accent)" id="progress-pct">0%</div>
+      <div class="stat-sub">Phase 1 aktiv</div>
+      <div class="stat-bar"><div class="stat-bar-fill" id="progress-bar" style="width:0%;background:var(--accent)"></div></div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">🔥 Streak</div>
+      <div class="stat-val" style="color:var(--accent3)" id="streak-stat">0</div>
+      <div class="stat-sub">Tage in Folge</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Aufgaben heute</div>
+      <div class="stat-val" id="tasks-done-stat">0/4</div>
+      <div class="stat-sub">erledigt</div>
+    </div>
+  </div>
+
+  <div class="grid-main">
+    <div>
+      <!-- TIPP -->
+      <div class="card" style="border-color:rgba(245,158,11,0.2);margin-bottom:12px">
+        <div class="card-title"><div class="dot" style="background:var(--accent3)"></div>Tipp des Tages</div>
+        <div style="font-size:13px;line-height:1.6;color:var(--muted)" id="daily-tip">
+          Wird geladen...
+        </div>
+        <div style="margin-top:10px;padding:8px 10px;background:var(--surface);border-radius:7px;font-family:var(--mono);font-size:11px;color:var(--accent);line-height:1.7" id="tip-example"></div>
+      </div>
+
+      <!-- PHASEN ÜBERBLICK -->
+      <div class="card">
+        <div class="card-title"><div class="dot" style="background:var(--accent)"></div>Dein Lernpfad</div>
+        <div class="callout">5 Phasen · ca. 12 Monate · Von KI-Grundlagen bis zum eigenen Produkt</div>
+        <div class="phase-list" id="overview-phases"></div>
+      </div>
+    </div>
+
+    <!-- SIDEBAR RECHTS -->
+    <div>
+      <div class="card" style="margin-bottom:12px">
+        <div class="card-title"><div class="dot" style="background:var(--accent2)"></div>Heute erledigen</div>
+        <div id="today-tasks-preview"></div>
+        <button class="btn sm" style="width:100%;margin-top:6px" onclick="show('tasks')">Alle Aufgaben →</button>
+      </div>
+
+      <div class="card" style="margin-bottom:12px">
+        <div class="card-title"><div class="dot" style="background:var(--accent4)"></div>Kompetenz-Stand</div>
+        <div id="skills-overview"></div>
+      </div>
+
+      <div class="card" style="border-color:rgba(124,108,252,0.25);cursor:pointer" onclick="show('quiz')">
+        <div class="card-title"><div class="dot" style="background:var(--accent)"></div>Wissens-Quiz</div>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:10px">Teste dein Verständnis und sammle XP-Punkte.</p>
+        <button class="btn primary" style="width:100%">Quiz starten →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ROADMAP ===== -->
+<div id="view-roadmap" class="view">
+  <div class="page-header">
+    <h2>Roadmap 📍</h2>
+    <p>Dein kompletter Lernpfad – Phase für Phase</p>
+  </div>
+
+  <!-- Phase 1 -->
+  <div class="card" style="border-color:rgba(124,108,252,0.3);margin-bottom:12px">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+      <div style="background:var(--accent);width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0">1</div>
+      <div style="flex:1">
+        <div style="font-size:14px;font-weight:700">KI-Grundlagen & Orientierung</div>
+        <div style="font-size:10px;color:var(--muted)">Woche 1–4 · ~30–45 Min. täglich</div>
+      </div>
+      <span style="font-size:9px;padding:3px 8px;border-radius:5px;background:rgba(124,108,252,0.15);color:var(--accent);font-family:var(--mono);font-weight:600">AKTIV</span>
+    </div>
+    <div class="grid-2">
+      <div class="phase-detail-card">
+        <div class="week-header" style="color:var(--accent)">Woche 1–2 · Orientierung</div>
+        <div class="week-tasks">
+          ✦ Was ist KI, ML, Deep Learning?<br>
+          ✦ Unterschied: Claude, GPT-4, Gemini<br>
+          ✦ Prompt Engineering Basics<br>
+          ✦ Zero-Shot vs. Few-Shot Prompts<br>
+          ✦ <strong style="color:var(--text)">Mini-Projekt:</strong> 10 Prompts schreiben & vergleichen
+        </div>
+      </div>
+      <div class="phase-detail-card">
+        <div class="week-header" style="color:var(--accent3)">Woche 3–4 · Prompts meistern</div>
+        <div class="week-tasks">
+          ✦ Chain-of-Thought Prompting<br>
+          ✦ System Prompts verstehen<br>
+          ✦ Token & Kontextfenster<br>
+          ✦ Rollen-Prompting ausprobieren<br>
+          ✦ <strong style="color:var(--text)">Projekt:</strong> Eigenen KI-Assistenten konfigurieren
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Phase 2 -->
+  <div class="card" style="margin-bottom:12px;opacity:.85">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+      <div style="background:rgba(245,158,11,0.2);border:1px solid rgba(245,158,11,0.35);width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:var(--accent3);flex-shrink:0">2</div>
+      <div>
+        <div style="font-size:14px;font-weight:700">Automatisierung & Bots</div>
+        <div style="font-size:10px;color:var(--muted)">Woche 5–10 · No-Code & erste API-Erfahrungen</div>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="phase-detail-card">
+        <div class="week-header" style="color:var(--accent3)">Woche 5–7 · No-Code Tools</div>
+        <div class="week-tasks">
+          ✦ Make.com / n8n Grundlagen<br>
+          ✦ Webhooks & Trigger verstehen<br>
+          ✦ Erster E-Mail-Bot<br>
+          ✦ Slack / Telegram Bot bauen<br>
+          ✦ <strong style="color:var(--text)">Projekt:</strong> Täglicher KI-Newsletter-Bot
+        </div>
+      </div>
+      <div class="phase-detail-card">
+        <div class="week-header" style="color:var(--accent2)">Woche 8–10 · APIs & Daten</div>
+        <div class="week-tasks">
+          ✦ REST APIs verstehen (einfach)<br>
+          ✦ Claude API / OpenAI API nutzen<br>
+          ✦ API-Calls in Automationen bauen<br>
+          ✦ Airtable + KI verknüpfen<br>
+          ✦ <strong style="color:var(--text)">Projekt:</strong> Automatisiertes CRM
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Phase 3 -->
+  <div class="card" style="margin-bottom:12px;opacity:.7">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+      <div style="background:rgba(62,207,142,0.15);border:1px solid rgba(62,207,142,0.3);width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:var(--accent2);flex-shrink:0">3</div>
+      <div>
+        <div style="font-size:14px;font-weight:700">Vibecoding & Entwicklung</div>
+        <div style="font-size:10px;color:var(--muted)">Woche 11–18 · Mit KI programmieren lernen</div>
+      </div>
+    </div>
+    <div style="font-size:12px;line-height:1.9;color:var(--muted);padding:10px;background:var(--surface);border-radius:9px;border:1px solid var(--border)">
+      ✦ HTML/CSS/JS Basics mit KI lernen &nbsp;·&nbsp; ✦ GitHub Copilot & Claude Code &nbsp;·&nbsp; ✦ Erste Web-App bauen<br>
+      ✦ React Grundlagen vibecooden &nbsp;·&nbsp; ✦ Datenbank-Basics (SQL) &nbsp;·&nbsp; ✦ <strong style="color:var(--text)">Projekt:</strong> Eigenes KI-Tool als Web-App deployen
+    </div>
+  </div>
+
+  <!-- Phase 4 + 5 -->
+  <div class="grid-2">
+    <div class="card" style="opacity:.55">
+      <div style="font-size:13px;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:8px">
+        <span style="background:rgba(236,72,153,0.15);color:var(--accent4);padding:2px 8px;border-radius:5px;font-size:10px;font-family:var(--mono)">Phase 4</span>
+        Produkt & Marktlücke
+      </div>
+      <div style="font-size:11px;line-height:1.85;color:var(--muted)">
+        Woche 19–28<br>
+        Jobs-to-be-done Methode<br>
+        MVP in 2 Wochen bauen<br>
+        B2B SaaS Grundlagen<br>
+        Erste 10 Kunden finden
+      </div>
+    </div>
+    <div class="card" style="opacity:.4">
+      <div style="font-size:13px;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:8px">
+        <span style="background:rgba(91,77,224,0.15);color:#a78bfa;padding:2px 8px;border-radius:5px;font-size:10px;font-family:var(--mono)">Phase 5</span>
+        Launch & Wachstum
+      </div>
+      <div style="font-size:11px;line-height:1.85;color:var(--muted)">
+        Woche 29–52<br>
+        Product-Market Fit finden<br>
+        Pricing-Strategien entwickeln<br>
+        Content Marketing mit KI<br>
+        Skalieren & erste Einnahmen
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== WOCHENPLAN ===== -->
+<div id="view-weekly" class="view">
+  <div class="page-header">
+    <h2>Wochenplan 📅</h2>
+    <p>Tagesweise Struktur für Phase 1</p>
+  </div>
+  <div class="grid-main">
+    <div>
+      <div class="card" style="margin-bottom:12px">
+        <div class="card-title"><div class="dot" style="background:var(--accent)"></div>Diese Woche</div>
+        <div class="week-grid" id="week-grid"></div>
+        <div style="font-size:10px;color:var(--muted);display:flex;gap:12px">
+          <span>🟢 Erledigt &nbsp; 🟣 Heute &nbsp; ⬜ Offen</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title"><div class="dot" style="background:var(--accent3)"></div>Wocheninhalt Phase 1</div>
+        <div class="grid-2">
+          <div class="phase-detail-card">
+            <div class="week-header" style="color:var(--accent)">Woche 1</div>
+            <div class="week-tasks">Mo: KI-Überblick verschaffen<br>Di: 5 Top-Modelle kennen<br>Mi: Ersten Prompt testen<br>Do: 3 Prompt-Varianten<br>Fr: roadmap.sh erkunden<br>Sa: Zusammenfassung<br>So: Quiz Woche 1</div>
+          </div>
+          <div class="phase-detail-card">
+            <div class="week-header" style="color:var(--accent3)">Woche 2</div>
+            <div class="week-tasks">Mo: System Prompts<br>Di: Rollen-Prompts<br>Mi: Chain-of-Thought<br>Do: Few-Shot testen<br>Fr: Eigenen Assistenten<br>Sa: Prompt-Bibliothek<br>So: Quiz Woche 2</div>
+          </div>
+          <div class="phase-detail-card">
+            <div class="week-header" style="color:var(--accent2)">Woche 3</div>
+            <div class="week-tasks">Mo: Claude Projects<br>Di: KI für E-Mails<br>Mi: KI für Recherche<br>Do: KI für Präsentationen<br>Fr: API-Konzept (theoretisch)<br>Sa: Use-Case definieren<br>So: Quiz Woche 3</div>
+          </div>
+          <div class="phase-detail-card">
+            <div class="week-header" style="color:var(--accent4)">Woche 4</div>
+            <div class="week-tasks">Mo: Projektidee<br>Di: Recherche mit KI<br>Mi: Template bauen<br>Do: KI-Feedback einholen<br>Fr: Projekt fertigstellen<br>Sa: Auf GitHub laden<br>So: Phase-1-Quiz</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:12px">
+        <div class="card-title"><div class="dot" style="background:var(--accent2)"></div>Tagesroutine</div>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div style="display:flex;gap:8px;align-items:center">
+            <div style="font-family:var(--mono);font-size:10px;color:var(--accent);width:45px;flex-shrink:0">08:00</div>
+            <div style="flex:1;background:var(--surface);border-radius:7px;padding:8px 9px;font-size:11px;border:1px solid var(--border)"><strong>Lesen</strong> · 1 KI-Konzept (15 Min.)</div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <div style="font-family:var(--mono);font-size:10px;color:var(--accent3);width:45px;flex-shrink:0">12:00</div>
+            <div style="flex:1;background:var(--surface);border-radius:7px;padding:8px 9px;font-size:11px;border:1px solid var(--border)"><strong>Ausprobieren</strong> · Tool üben (20 Min.)</div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <div style="font-family:var(--mono);font-size:10px;color:var(--accent2);width:45px;flex-shrink:0">19:00</div>
+            <div style="flex:1;background:var(--surface);border-radius:7px;padding:8px 9px;font-size:11px;border:1px solid var(--border)"><strong>Bauen</strong> · Projekt arbeiten (30 Min.)</div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <div style="font-family:var(--mono);font-size:10px;color:var(--accent4);width:45px;flex-shrink:0">21:00</div>
+            <div style="flex:1;background:var(--surface);border-radius:7px;padding:8px 9px;font-size:11px;border:1px solid var(--border)"><strong>Reflektieren</strong> · Was gelernt? (5 Min.)</div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title"><div class="dot" style="background:var(--accent)"></div>Wochenziel setzen</div>
+        <textarea class="notes-area" id="weekly-goal" placeholder="Was möchtest du diese Woche lernen oder ausprobieren?" style="min-height:100px" oninput="saveWeeklyGoal()"></textarea>
+        <div style="font-size:10px;color:var(--accent2);margin-top:5px;font-family:var(--mono)" id="goal-saved"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== AUFGABEN ===== -->
+<div id="view-tasks" class="view">
+  <div class="page-header">
+    <h2>Aufgaben ✅</h2>
+    <p>Tägliche & wöchentliche Lernaufgaben</p>
+  </div>
+
+  <div class="grid-main">
+    <div>
+      <div class="card" style="margin-bottom:12px">
+        <div class="card-title"><div class="dot" style="background:var(--accent2)"></div>Heute – Phase 1, Woche 1</div>
+        <div id="task-list-daily"></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><div class="dot" style="background:var(--accent3)"></div>Diese Woche</div>
+        <div id="task-list-weekly"></div>
+      </div>
+    </div>
+    <div>
+      <div class="card">
+        <div class="card-title"><div class="dot" style="background:var(--accent)"></div>Fortschritt</div>
+        <div id="task-progress-block"></div>
+        <div style="margin-top:12px;padding:10px;background:var(--surface);border-radius:8px;border:1px solid var(--border);font-size:12px;color:var(--muted);line-height:1.6">
+          💡 <strong style="color:var(--text)">Tipp:</strong> Jede erledigte Aufgabe bringt dir XP. Konsistenz schlägt Perfektion – auch 20 Minuten täglich reichen!
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== QUIZ ===== -->
+<div id="view-quiz" class="view">
+  <div class="page-header">
+    <h2>Wissens-Quiz 🧠</h2>
+    <p>Teste dein Wissen und sammle XP · Phase 1: KI-Grundlagen</p>
+  </div>
+  <div class="quiz-wrap">
+    <div class="quiz-header">
+      <div style="font-size:12px;color:var(--muted);font-family:var(--mono)">Gesamt-Score: <span id="quiz-total-score" style="color:var(--accent2)">0 richtig</span></div>
+      <div style="font-size:12px;color:var(--muted);font-family:var(--mono)" id="quiz-counter">Frage 1 / 10</div>
+    </div>
+    <div class="quiz-card" id="quiz-card">
+      <div class="quiz-q" id="quiz-q">Wird geladen...</div>
+      <div class="quiz-options" id="quiz-opts"></div>
+      <div class="quiz-feedback" id="quiz-fb" style="display:none"></div>
+    </div>
+    <div class="quiz-nav">
+      <div class="dots" id="quiz-dots"></div>
+      <button class="btn primary" id="quiz-next" onclick="nextQ()" style="display:none">Weiter →</button>
+    </div>
+    <div id="quiz-result" style="display:none"></div>
+  </div>
+</div>
+
+<!-- ===== NOTIZEN ===== -->
+<div id="view-notes" class="view">
+  <div class="page-header">
+    <h2>Meine Notizen 📝</h2>
+    <p>Alles wird automatisch gespeichert</p>
+  </div>
+  <div class="grid-main">
+    <div>
+      <div class="card" style="margin-bottom:12px">
+        <div class="card-title"><div class="dot" style="background:var(--accent)"></div>Lernnotizen</div>
+        <textarea class="notes-area" id="notes-main" placeholder="Schreibe hier alles auf, was du lernst – Konzepte, Erkenntnisse, Ideen, Links...&#10;&#10;Alles wird automatisch gespeichert." style="min-height:260px" oninput="saveNotes('main')"></textarea>
+        <div id="notes-main-saved" class="notes-saved" style="margin-top:5px">Gespeichert ✓</div>
+      </div>
+      <div class="card">
+        <div class="card-title"><div class="dot" style="background:var(--accent4)"></div>Ideen & Projektideen</div>
+        <textarea class="notes-area" id="notes-ideas" placeholder="Ideen für Automationen, Projekte, Marktlücken...&#10;Nichts ist zu klein oder zu verrückt!" style="min-height:140px" oninput="saveNotes('ideas')"></textarea>
+        <div id="notes-ideas-saved" class="notes-saved" style="margin-top:5px">Gespeichert ✓</div>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:12px">
+        <div class="card-title"><div class="dot" style="background:var(--accent3)"></div>Prompt-Bibliothek</div>
+        <textarea class="notes-area" id="notes-prompts" placeholder="Deine besten Prompts sammeln:&#10;&#10;Prompt 1: ...&#10;Prompt 2: ..." style="min-height:180px" oninput="saveNotes('prompts')"></textarea>
+        <div id="notes-prompts-saved" class="notes-saved" style="margin-top:5px">Gespeichert ✓</div>
+      </div>
+      <div class="card">
+        <div class="card-title"><div class="dot" style="background:var(--accent2)"></div>Links & Ressourcen</div>
+        <textarea class="notes-area" id="notes-links" placeholder="Nützliche Links, Artikel, Videos:&#10;&#10;- ..." style="min-height:100px" oninput="saveNotes('links')"></textarea>
+        <div id="notes-links-saved" class="notes-saved" style="margin-top:5px">Gespeichert ✓</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== RESSOURCEN ===== -->
+<div id="view-resources" class="view">
+  <div class="page-header">
+    <h2>Ressourcen 📚</h2>
+    <p>Kuratierte Links – alle kostenlos</p>
+  </div>
+  <div class="grid-2">
+    <div>
+      <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px">🎓 Lernplattformen</div>
+      <a href="https://roadmap.sh/ai-engineer" target="_blank" class="res-item"><div class="res-icon" style="background:rgba(124,108,252,0.15)">🗺</div><div><div class="res-name">roadmap.sh – AI Engineer</div><div class="res-tag">Visueller Lernpfad · Kostenlos</div></div><div class="res-arrow">↗</div></a>
+      <a href="https://github.com/freeCodeCamp/freeCodeCamp" target="_blank" class="res-item"><div class="res-icon" style="background:rgba(62,207,142,0.15)">💚</div><div><div class="res-name">freeCodeCamp</div><div class="res-tag">Coding lernen · Sehr anfängerfreundlich</div></div><div class="res-arrow">↗</div></a>
+      <a href="https://www.promptingguide.ai" target="_blank" class="res-item"><div class="res-icon" style="background:rgba(245,158,11,0.15)">⚡</div><div><div class="res-name">Prompt Engineering Guide</div><div class="res-tag">promptingguide.ai · Sehr empfohlen</div></div><div class="res-arrow">↗</div></a>
+      <a href="https://learn.deeplearning.ai" target="_blank" class="res-item"><div class="res-icon" style="background:rgba(236,72,153,0.15)">🤖</div><div><div class="res-name">DeepLearning.AI (Andrew Ng)</div><div class="res-tag">Kurse vom KI-Pionier · Kostenlos</div></div><div class="res-arrow">↗</div></a>
+      <a href="https://huggingface.co/learn" target="_blank" class="res-item"><div class="res-icon" style="background:rgba(245,158,11,0.12)">🤗</div><div><div class="res-name">Hugging Face – NLP Course</div><div class="res-tag">ML & Transformers · Open Source</div></div><div class="res-arrow">↗</div></a>
+      <a href="https://github.com/microsoft/generative-ai-for-beginners" target="_blank" class="res-item"><div class="res-icon" style="background:rgba(0,120,212,0.15)">🪟</div><div><div class="res-name">Microsoft – Gen AI for Beginners</div><div class="res-tag">18 Lektionen auf GitHub</div></div><div class="res-arrow">↗</div></a>
+      <a href="https://github.com/f/awesome-chatgpt-prompts" target="_blank" class="res-item"><div class="res-icon" style="background:rgba(124,108,252,0.12)">✨</div><div><div class="res-name">Awesome ChatGPT Prompts</div><div class="res-tag">GitHub · 100+ Prompt-Vorlagen</div></div><div class="res-arrow">↗</div></a>
+    </div>
+    <div>
+      <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px">🛠 Tools zum Starten</div>
+      <a href="https://claude.ai" target="_blank" class="res-item"><div class="res-icon" style="background:rgba(124,108,252,0.2)">✦</div><div><div class="res-name">Claude (Anthropic)</div><div class="res-tag">Dein primäres KI-Modell</div></div><div class="res-arrow">↗</div></a>
+      <a href="https://make.com" target="_blank" class="res-item"><div class="res-icon" style="background:rgba(124,108,252,0.15)">⚙️</div><div><div class="res-name">Make.com</div><div class="res-tag">No-Code Automatisierung · Free Tier</div></div><div class="res-arrow">↗</div></a>
+      <a href="https://n8n.io" target="_blank" class="res-item"><div class="res-icon" style="background:rgba(245,158,11,0.15)">🔄</div><div><div class="res-name">n8n</div><div class="res-tag">Open-Source Automatisierung</div></div><div class="res-arrow">↗</div></a>
+      <a href="https://github.com" target="_blank" class="res-item"><div class="res-icon" style="background:rgba(255,255,255,0.07)">🐙</div><div><div class="res-name">GitHub</div><div class="res-tag">Code-Hosting · Projekte verwalten</div></div><div class="res-arrow">↗</div></a>
+      <a href="https://replit.com" target="_blank" class="res-item"><div class="res-icon" style="background:rgba(62,207,142,0.15)">💻</div><div><div class="res-name">Replit</div><div class="res-tag">Im Browser coden · Ideal für Anfänger</div></div><div class="res-arrow">↗</div></a>
+      <a href="https://v0.dev" target="_blank" class="res-item"><div class="res-icon" style="background:rgba(255,255,255,0.06)">🎨</div><div><div class="res-name">v0.dev (Vercel)</div><div class="res-tag">UI mit KI generieren · Vibecoding</div></div><div class="res-arrow">↗</div></a>
+      <a href="https://docs.anthropic.com" target="_blank" class="res-item"><div class="res-icon" style="background:rgba(124,108,252,0.15)">📖</div><div><div class="res-name">Anthropic Docs</div><div class="res-tag">Claude API Dokumentation</div></div><div class="res-arrow">↗</div></a>
+    </div>
+  </div>
+</div>
+
+<!-- ===== GLOSSAR ===== -->
+<div id="view-glossary" class="view">
+  <div class="page-header">
+    <h2>KI-Glossar 🔤</h2>
+    <p>Die wichtigsten Begriffe einfach erklärt</p>
+  </div>
+  <div style="margin-bottom:12px">
+    <input type="text" id="glossary-search" placeholder="Begriff suchen..." oninput="filterGlossary()"
+      style="width:100%;padding:10px 14px;background:var(--card);border:1px solid var(--border);border-radius:9px;font-family:var(--font);font-size:13px;color:var(--text);outline:none;transition:border .15s;"
+      onfocus="this.style.borderColor='var(--border2)'" onblur="this.style.borderColor='var(--border)'">
+  </div>
+  <div id="glossary-list"></div>
+</div>
+
+<!-- ===== EINSTELLUNGEN ===== -->
+<div id="view-settings" class="view">
+  <div class="page-header">
+    <h2>Einstellungen ⚙️</h2>
+    <p>Passe deinen Lernpfad an</p>
+  </div>
+  <div class="card" style="margin-bottom:12px">
+    <div class="card-title"><div class="dot" style="background:var(--accent)"></div>Profil</div>
+    <div class="setting-row">
+      <div><div class="setting-label">Name</div><div class="setting-sub">Wie soll ich dich nennen?</div></div>
+      <input type="text" id="user-name" placeholder="Dein Name" oninput="saveName()"
+        style="background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:6px 10px;font-family:var(--font);font-size:13px;color:var(--text);outline:none;width:140px;">
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Aktuelles Level</div><div class="setting-sub">Wo stehst du gerade?</div></div>
+      <select id="user-level" onchange="saveLevel()"
+        style="background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:6px 10px;font-family:var(--font);font-size:13px;color:var(--text);outline:none;">
+        <option value="beginner">Einsteiger</option>
+        <option value="some">Etwas Erfahrung</option>
+        <option value="intermediate">Fortgeschritten</option>
+      </select>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Lernziel</div><div class="setting-sub">Dein Hauptziel</div></div>
+      <select id="user-goal" onchange="saveGoalSetting()"
+        style="background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:6px 10px;font-family:var(--font);font-size:13px;color:var(--text);outline:none;">
+        <option value="automation">Automatisierungen</option>
+        <option value="product">Eigenes Produkt</option>
+        <option value="career">Karriere in KI</option>
+        <option value="general">Allgemeines Wissen</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:12px">
+    <div class="card-title"><div class="dot" style="background:var(--accent3)"></div>Fortschritt</div>
+    <div class="setting-row">
+      <div><div class="setting-label">XP zurücksetzen</div><div class="setting-sub">Setzt alle XP-Punkte auf 0</div></div>
+      <button class="btn sm" onclick="resetXP()" style="border-color:rgba(236,72,153,0.3);color:var(--accent4)">Zurücksetzen</button>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Alles zurücksetzen</div><div class="setting-sub">Setzt alle Daten zurück</div></div>
+      <button class="btn sm" onclick="confirmReset()" style="border-color:rgba(236,72,153,0.4);color:var(--accent4)">App zurücksetzen</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="dot" style="background:var(--accent2)"></div>Info</div>
+    <div style="font-size:12px;color:var(--muted);line-height:1.7">
+      KI-Lernpfad 2025 · Version 1.0<br>
+      Alle Daten werden lokal in deinem Browser gespeichert (localStorage).<br>
+      Du kannst diese Datei auf deinen Desktop legen und offline nutzen.<br><br>
+      <strong style="color:var(--text)">Tipp:</strong> Lege die Datei auf den Desktop und öffne sie täglich für deine Lernroutine!
+    </div>
+  </div>
+</div>
+
+</div><!-- /main -->
+</div><!-- /app -->
+
+<!-- MOBILE NAV -->
+<div class="mobile-nav">
+  <button class="mobile-nav-btn active" onclick="show('overview')"><span class="mn-icon">🗺</span>Start</button>
+  <button class="mobile-nav-btn" onclick="show('roadmap')"><span class="mn-icon">📍</span>Pfad</button>
+  <button class="mobile-nav-btn" onclick="show('tasks')"><span class="mn-icon">✅</span>Aufgaben</button>
+  <button class="mobile-nav-btn" onclick="show('quiz')"><span class="mn-icon">🧠</span>Quiz</button>
+  <button class="mobile-nav-btn" onclick="show('notes')"><span class="mn-icon">📝</span>Notizen</button>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <div class="modal-title" id="modal-title"></div>
+    <div class="modal-body" id="modal-body"></div>
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn" onclick="closeModal()">Abbrechen</button>
+      <button class="btn primary" id="modal-confirm">Bestätigen</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// =====================
+// STATE & STORAGE
+// =====================
+const KEY = 'ki_lernpfad_v1';
+let state = JSON.parse(localStorage.getItem(KEY) || 'null') || {
+  xp: 0, streak: 0, lastVisit: null,
+  tasksDaily: [false,false,false,false],
+  tasksWeekly: [false,false,false,false,false,false,false],
+  quizScore: 0, quizAnswered: 0,
+  notes: { main:'', ideas:'', prompts:'', links:'' },
+  weeklyGoal: '',
+  userName: '', userLevel: 'beginner', userGoal: 'automation',
+  phase: 1, weekDots: [false,false,false,false,false,false,false],
+  currentView: 'overview'
+};
+
+function save() { localStorage.setItem(KEY, JSON.stringify(state)); }
+
+// =====================
+// STREAK & VISIT
+// =====================
+function checkStreak() {
+  const today = new Date().toDateString();
+  if (state.lastVisit !== today) {
+    const yesterday = new Date(Date.now() - 86400000).toDateString();
+    if (state.lastVisit === yesterday) { state.streak++; }
+    else if (state.lastVisit !== today) { state.streak = state.lastVisit ? 1 : 1; }
+    state.lastVisit = today;
+    save();
+  }
+}
+
+// =====================
+// XP
+// =====================
+function addXP(amount, label) {
+  state.xp = Math.min(state.xp + amount, 1000);
+  save();
+  updateXPDisplay();
+  showXPToast('+' + amount + ' XP' + (label ? ' · ' + label : ''));
+}
+function updateXPDisplay() {
+  const pct = (state.xp / 1000) * 100;
+  document.getElementById('xp-display').textContent = state.xp + ' / 1000';
+  document.getElementById('xp-bar').style.width = pct + '%';
+  document.getElementById('streak-display').textContent = state.streak;
+  document.getElementById('streak-stat').textContent = state.streak;
+}
+function showXPToast(msg) {
+  const t = document.createElement('div');
+  t.textContent = msg;
+  Object.assign(t.style, {
+    position:'fixed',bottom:'80px',right:'20px',zIndex:'200',
+    background:'var(--accent)',color:'#fff',padding:'8px 14px',
+    borderRadius:'8px',fontSize:'13px',fontWeight:'600',
+    fontFamily:'var(--mono)',animation:'fadeOut 2s ease forwards'
+  });
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 2000);
+}
+
+// =====================
+// NAVIGATION
+// =====================
+function show(view) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.mobile-nav-btn').forEach(b => b.classList.remove('active'));
+
+  document.getElementById('view-' + view).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(b => {
+    if (b.getAttribute('onclick')?.includes("'"+view+"'")) b.classList.add('active');
+  });
+  document.querySelectorAll('.mobile-nav-btn').forEach(b => {
+    if (b.getAttribute('onclick')?.includes("'"+view+"'")) b.classList.add('active');
+  });
+
+  state.currentView = view;
+  save();
+
+  if (view === 'weekly') buildWeekGrid();
+  if (view === 'quiz') renderQ();
+  if (view === 'glossary') renderGlossary();
+  if (view === 'notes') loadNotes();
+  if (view === 'tasks') renderTasks();
+  if (view === 'overview') renderOverview();
+  if (view === 'settings') loadSettings();
+}
+
+// =====================
+// OVERVIEW
+// =====================
+const tips = [
+  {
+    t: "Der beste Prompt ist wie eine gute Aufgabe an einen Mitarbeiter.",
+    e: '💡 Template: "Du bist [Rolle]. Aufgabe: [Was?]. Kontext: [Infos]. Format: [Ausgabe]."'
+  },
+  {
+    t: "Chain-of-Thought: Bitte die KI, schrittweise zu denken.",
+    e: '💡 Tipp: Füge "Denke Schritt für Schritt" an deine Prompts – das verbessert die Qualität stark.'
+  },
+  {
+    t: "Konsistenz schlägt Intensität: 30 Min. täglich > 5 Std. am Wochenende.",
+    e: '💡 Bestes System: Jeden Tag zur gleichen Zeit für 30-45 Minuten lernen.'
+  },
+  {
+    t: "GitHub ist deine Lernbibliothek – nicht nur für Code.",
+    e: '💡 Suche: "awesome-prompt-engineering" oder "n8n-templates" für fertige Ressourcen.'
+  },
+  {
+    t: "Vibecoding: Du musst nicht alles verstehen – du steuerst die KI.",
+    e: '💡 Workflow: Beschreiben → KI schreibt Code → Du testest → Du verfeinerst.'
+  }
+];
+function renderOverview() {
+  const d = new Date();
+  const opts = { weekday:'long', year:'numeric', month:'long', day:'numeric' };
+  document.getElementById('date-display').textContent = d.toLocaleDateString('de-DE', opts);
+
+  const tip = tips[d.getDate() % tips.length];
+  document.getElementById('daily-tip').innerHTML =
+    '<strong style="color:var(--text)">' + tip.t.split(':')[0] + ':</strong> ' + (tip.t.split(':')[1]||'');
+  document.getElementById('tip-example').textContent = tip.e;
+
+  const pct = Math.round(state.xp / 10);
+  document.getElementById('progress-pct').textContent = pct + '%';
+  document.getElementById('progress-bar').style.width = pct + '%';
+
+  const done = state.tasksDaily.filter(Boolean).length;
+  document.getElementById('tasks-done-stat').textContent = done + '/' + state.tasksDaily.length;
+
+  // Phasen
+  const phases = [
+    {n:1,title:'KI-Grundlagen',sub:'Was ist KI? Prompts? Grundkonzepte.', color:'var(--accent)', tag:'Woche 1–4'},
+    {n:2,title:'Automatisierung & Bots',sub:'Make, n8n, erste Bots bauen.',color:'var(--accent3)',tag:'Woche 5–10'},
+    {n:3,title:'Vibecoding',sub:'Mit KI programmieren lernen.',color:'var(--accent2)',tag:'Woche 11–18'},
+    {n:4,title:'Produkt & Marktlücke',sub:'MVP, B2B, erste Kunden.',color:'var(--accent4)',tag:'Woche 19–28'},
+    {n:5,title:'Launch & Wachstum',sub:'Skalieren & monetarisieren.',color:'#a78bfa',tag:'Woche 29–52'},
+  ];
+  document.getElementById('overview-phases').innerHTML = phases.map((p,i) =>
+    `<div class="phase-item ${i===0?'current':''}" onclick="show('roadmap')">
+      <div class="phase-num" style="${i===0?'background:var(--accent);color:#fff':''}">${p.n}</div>
+      <div>
+        <div class="phase-title">${p.title}</div>
+        <div class="phase-sub">${p.sub}</div>
+        <span class="phase-tag" style="background:${p.color}22;color:${p.color}">${p.tag}</span>
+      </div>
+    </div>`
+  ).join('');
+
+  // Task preview
+  const dailyTasks = getDailyTasks();
+  document.getElementById('today-tasks-preview').innerHTML =
+    dailyTasks.slice(0,3).map((t,i) =>
+      `<div class="task-item ${state.tasksDaily[i]?'done':''}" onclick="toggleDailyTask(${i})">
+        <div class="task-cb">${state.tasksDaily[i]?'✓':''}</div>
+        <div><div class="task-text">${t.text}</div></div>
+      </div>`
+    ).join('') + (state.tasksDaily.filter(Boolean).length === dailyTasks.length ?
+      '<div style="font-size:12px;color:var(--accent2);text-align:center;padding:8px;font-weight:600">🎉 Alle Aufgaben erledigt!</div>' : '');
+
+  // Skills
+  const skills = [
+    {label:'Prompt-Denken',pct:Math.min(state.xp*0.1,100),color:'var(--accent)'},
+    {label:'KI-Tools',pct:Math.min(state.xp*0.08,100),color:'var(--accent3)'},
+    {label:'Automatisierung',pct:0,color:'var(--accent2)'},
+    {label:'Coding mit KI',pct:0,color:'#818cf8'},
+  ];
+  document.getElementById('skills-overview').innerHTML = skills.map(s =>
+    `<div class="prog-row">
+      <div class="prog-label">${s.label}</div>
+      <div class="prog-bar"><div class="prog-fill" style="width:${s.pct}%;background:${s.color}"></div></div>
+      <div class="prog-pct">${Math.round(s.pct)}%</div>
+    </div>`
+  ).join('');
+}
+
+// =====================
+// TASKS
+// =====================
+function getDailyTasks() {
+  return [
+    {text:'Lies einen KI-Artikel oder schaue ein Erklärvideo (15 Min.)', tag:'lesen'},
+    {text:'Schreibe einen Prompt und verbessere ihn 3x (20 Min.)', tag:'üben'},
+    {text:'Schaue roadmap.sh → AI Engineer Roadmap an (10 Min.)', tag:'entdecken'},
+    {text:'Mache das Tages-Quiz (5 Min.)', tag:'quiz'},
+  ];
+}
+function getWeeklyTasks() {
+  return [
+    {text:'Glossar: 5 KI-Begriffe nachschlagen und notieren', tag:'wissen'},
+    {text:'Einen Prompt-Template in die Bibliothek eintragen', tag:'praxis'},
+    {text:'Wochenziel im Wochenplan setzen', tag:'planung'},
+    {text:'GitHub Account anlegen (falls noch nicht)', tag:'setup'},
+    {text:'roadmap.sh komplett durchgehen', tag:'orientierung'},
+    {text:'Einen YouTube-Kanal zu KI abonnieren (z.B. AI Explained)', tag:'lernen'},
+    {text:'Wochenrückblick: Was habe ich gelernt? (10 Min.)', tag:'reflexion'},
+  ];
+}
+function renderTasks() {
+  const daily = getDailyTasks();
+  const weekly = getWeeklyTasks();
+  const doneD = state.tasksDaily.filter(Boolean).length;
+  const doneW = state.tasksWeekly.filter(Boolean).length;
+
+  document.getElementById('task-list-daily').innerHTML = daily.map((t,i) =>
+    `<div class="task-item ${state.tasksDaily[i]?'done':''}" onclick="toggleDailyTask(${i})">
+      <div class="task-cb">${state.tasksDaily[i]?'✓':''}</div>
+      <div>
+        <div class="task-text">${t.text}</div>
+        <div class="task-tag">${t.tag} · ~${[15,20,10,5][i]} Min.</div>
+      </div>
+    </div>`
+  ).join('');
+
+  document.getElementById('task-list-weekly').innerHTML = weekly.map((t,i) =>
+    `<div class="task-item ${state.tasksWeekly[i]?'done':''}" onclick="toggleWeeklyTask(${i})">
+      <div class="task-cb">${state.tasksWeekly[i]?'✓':''}</div>
+      <div>
+        <div class="task-text">${t.text}</div>
+        <div class="task-tag">${t.tag}</div>
+      </div>
+    </div>`
+  ).join('');
+
+  document.getElementById('task-progress-block').innerHTML = `
+    <div class="prog-row">
+      <div class="prog-label">Heute</div>
+      <div class="prog-bar"><div class="prog-fill" style="width:${doneD/daily.length*100}%;background:var(--accent2)"></div></div>
+      <div class="prog-pct">${doneD}/${daily.length}</div>
+    </div>
+    <div class="prog-row">
+      <div class="prog-label">Diese Woche</div>
+      <div class="prog-bar"><div class="prog-fill" style="width:${doneW/weekly.length*100}%;background:var(--accent3)"></div></div>
+      <div class="prog-pct">${doneW}/${weekly.length}</div>
+    </div>
+  `;
+
+  document.getElementById('tasks-badge').textContent = daily.length - doneD;
+}
+function toggleDailyTask(i) {
+  const was = state.tasksDaily[i];
+  state.tasksDaily[i] = !was;
+  if (!was) addXP(25, 'Tagesaufgabe');
+  else state.xp = Math.max(0, state.xp - 25);
+  save();
+  renderTasks();
+  renderOverview();
+}
+function toggleWeeklyTask(i) {
+  const was = state.tasksWeekly[i];
+  state.tasksWeekly[i] = !was;
+  if (!was) addXP(40, 'Wochenaufgabe');
+  else state.xp = Math.max(0, state.xp - 40);
+  save();
+  renderTasks();
+}
+
+// =====================
+// WEEK GRID
+// =====================
+function buildWeekGrid() {
+  const g = document.getElementById('week-grid');
+  if (!g) return;
+  const days = ['Mo','Di','Mi','Do','Fr','Sa','So'];
+  const tod = new Date().getDay();
+  const todayIdx = tod === 0 ? 6 : tod - 1;
+  g.innerHTML = days.map((d,i) =>
+    `<div class="day-col">
+      <div class="day-lbl">${d}</div>
+      <div class="day-dot ${state.weekDots[i]?'done':i===todayIdx?'today':''}"
+           onclick="toggleDot(${i})">${state.weekDots[i]?'✓':''}</div>
+    </div>`
+  ).join('');
+}
+function toggleDot(i) {
+  state.weekDots[i] = !state.weekDots[i];
+  if (state.weekDots[i]) addXP(15, 'Tag erledigt');
+  save(); buildWeekGrid();
+}
+
+// =====================
+// QUIZ
+// =====================
+const questions = [
+  {q:"Was bedeutet LLM?",opts:["Large Language Model","Low Level Machine","Logical Learning Method","Language Lookup Module"],c:0,e:"LLM = Large Language Model – ein großes Sprachmodell wie Claude, trainiert auf riesigen Textmengen."},
+  {q:"Was ist der Unterschied zwischen einem Prompt und einem System Prompt?",opts:["Es gibt keinen Unterschied","System Prompt = Rolle/Anweisung für die KI; Prompt = Frage des Nutzers","System Prompts sind nur für Entwickler","Ein Prompt ist länger"],c:1,e:"Der System Prompt definiert die 'Persönlichkeit' der KI. Der User-Prompt ist deine konkrete Anfrage."},
+  {q:"Was bedeutet 'Kontextfenster' bei einem KI-Modell?",opts:["Bildschirmgröße beim Öffnen","Wie viel Text (Eingabe + Ausgabe) die KI gleichzeitig verarbeiten kann","Ein Sicherheitssystem","Die Antwortsprache der KI"],c:1,e:"Das Kontextfenster ist das 'Arbeitsgedächtnis' der KI – alles was hineinpasst, kann sie berücksichtigen."},
+  {q:"Was ist 'Chain-of-Thought' Prompting?",opts:["Mehrere KI-Modelle verknüpfen","Die KI bitten, schrittweise zu denken und den Gedankengang zu zeigen","Kurze Prompts hintereinander senden","Prompts auf Englisch schreiben"],c:1,e:"Chain-of-Thought: Die KI zeigt ihren Lösungsweg. Tipp: Füge 'Denke Schritt für Schritt' in Prompts ein!"},
+  {q:"Was ist der Hauptvorteil von No-Code Tools wie Make.com?",opts:["Sie sind schneller als Code","Automatisierungen ohne Programmierung – visuell per Drag-and-Drop","Sie sind immer kostenlos","Keine Internetverbindung nötig"],c:1,e:"Make.com und n8n erlauben es, komplexe Automationen ohne Programmierkenntnisse zu bauen."},
+  {q:"Was bedeutet 'Vibecoding'?",opts:["Eine Programmiersprache","Musik beim Coden hören","Mit KI zusammen entwickeln: KI schreibt den Code, du steuerst die Richtung","Ein Code-Editor für Anfänger"],c:2,e:"Vibecoding: Du beschreibst was du willst, die KI schreibt Code. Kein tiefes Coding-Wissen nötig!"},
+  {q:"Was sollte ein guter Prompt enthalten?",opts:["Nur die Frage, kurz und knapp","Kontext, Aufgabe, gewünschtes Format und Einschränkungen","Immer auf Englisch","Mindestens 500 Wörter"],c:1,e:"Struktur = bessere Antworten: Rolle + Kontext + Aufgabe + Format. Je relevanter die Info, desto besser."},
+  {q:"Wofür wird GitHub hauptsächlich genutzt?",opts:["Social Media für Entwickler","Versionskontrolle für Code + riesige Lernressource mit Millionen Projekten","Nur für Open-Source","Alternative zu Make.com"],c:1,e:"GitHub: Code lagern, im Team arbeiten, Millionen kostenlose Projekte finden. Unerlässlich für Entwickler!"},
+  {q:"Was ist 'Few-Shot Prompting'?",opts:["Möglichst kurze Prompts schreiben","Der KI einige Beispiele geben, wie die Antwort aussehen soll","Auf Englisch promten","Mehrere Fragen gleichzeitig stellen"],c:1,e:"Few-Shot: Du gibst 2–3 Beispiele für Input/Output, die KI versteht das Muster und setzt es fort."},
+  {q:"Was versteht man unter einem 'MVP' im Produktbereich?",opts:["Most Valuable Player","Minimum Viable Product – ein Produkt mit genau den Kernfunktionen für erste Nutzer","Maximum Value Proposition","Ein vollständiges, fertigentwickeltes Produkt"],c:1,e:"MVP = Minimum Viable Product. Die einfachste Version deines Produkts, die echten Nutzen bringt – schnell gebaut, schnell getestet!"},
+];
+let qi = 0, qScore = 0, qAnswered = false;
+function renderQ() {
+  qi = 0; qScore = 0; qAnswered = false;
+  document.getElementById('quiz-card').style.display = 'block';
+  document.querySelector('.quiz-wrap > .quiz-header').style.display = 'flex';
+  document.querySelector('.quiz-nav').style.display = 'flex';
+  document.getElementById('quiz-result').style.display = 'none';
+  showQ();
+}
+function showQ() {
+  qAnswered = false;
+  const q = questions[qi];
+  document.getElementById('quiz-counter').textContent = 'Frage ' + (qi+1) + ' / ' + questions.length;
+  document.getElementById('quiz-q').textContent = q.q;
+  document.getElementById('quiz-fb').style.display = 'none';
+  document.getElementById('quiz-next').style.display = 'none';
+  document.getElementById('quiz-opts').innerHTML = q.opts.map((o,i) =>
+    `<button class="quiz-opt" onclick="answerQ(${i})">${o}</button>`
+  ).join('');
+  document.getElementById('quiz-dots').innerHTML = questions.map((_,i) =>
+    `<div class="dot-item ${i<qi?'done':i===qi?'current':''}"></div>`
+  ).join('');
+}
+function answerQ(idx) {
+  if (qAnswered) return;
+  qAnswered = true;
+  const q = questions[qi];
+  document.querySelectorAll('.quiz-opt').forEach(o => o.disabled = true);
+  document.querySelectorAll('.quiz-opt')[idx].classList.add(idx===q.c?'correct':'wrong');
+  if (idx !== q.c) document.querySelectorAll('.quiz-opt')[q.c].classList.add('correct');
+  const fb = document.getElementById('quiz-fb');
+  fb.style.display = 'block';
+  if (idx === q.c) {
+    qScore++;
+    fb.className = 'quiz-feedback pos';
+    fb.textContent = '✓ Richtig! ' + q.e;
+    state.quizScore++;
+    addXP(50, 'Quiz richtig');
+  } else {
+    fb.className = 'quiz-feedback neg';
+    fb.textContent = '✗ Nicht ganz. ' + q.e;
+  }
+  state.quizAnswered++;
+  document.getElementById('quiz-total-score').textContent = state.quizScore + ' richtig';
+  save();
+  document.getElementById('quiz-next').style.display = 'block';
+}
+function nextQ() {
+  qi++;
+  if (qi >= questions.length) {
+    const pct = Math.round(qScore/questions.length*100);
+    document.getElementById('quiz-card').style.display = 'none';
+    document.querySelector('.quiz-nav').style.display = 'none';
+    document.getElementById('quiz-result').style.display = 'block';
+    document.getElementById('quiz-result').innerHTML = `
+      <div class="card" style="text-align:center;border-color:rgba(124,108,252,0.3)">
+        <div style="font-size:36px;margin-bottom:8px">${pct>=80?'🎉':pct>=60?'👍':'📚'}</div>
+        <div style="font-size:18px;font-weight:700;margin-bottom:6px">${pct>=80?'Ausgezeichnet!':pct>=60?'Gut gemacht!':'Weiter üben!'}</div>
+        <div style="font-size:26px;font-weight:700;color:var(--accent);margin:8px 0">${qScore} / ${questions.length}</div>
+        <div style="font-size:13px;color:var(--muted);margin-bottom:16px">${pct}% richtig</div>
+        <button class="btn primary" onclick="renderQ()">Nochmal</button>
+      </div>
+    `;
+  } else { showQ(); }
+}
+
+// =====================
+// NOTES
+// =====================
+let saveTimers = {};
+function saveNotes(key) {
+  state.notes[key] = document.getElementById('notes-' + key).value;
+  save();
+  const el = document.getElementById('notes-' + key + '-saved');
+  el.textContent = 'Gespeichert ✓'; el.style.opacity = 1;
+  clearTimeout(saveTimers[key]);
+  saveTimers[key] = setTimeout(() => el.style.opacity = 0, 2000);
+}
+function loadNotes() {
+  ['main','ideas','prompts','links'].forEach(k => {
+    const el = document.getElementById('notes-' + k);
+    if (el) el.value = state.notes[k] || '';
+  });
+}
+function saveWeeklyGoal() {
+  state.weeklyGoal = document.getElementById('weekly-goal').value;
+  save();
+  const el = document.getElementById('goal-saved');
+  el.textContent = 'Gespeichert ✓'; el.style.opacity = 1;
+  setTimeout(() => el.style.opacity = 0, 2000);
+}
+
+// =====================
+// GLOSSAR
+// =====================
+const glossary = [
+  {t:"LLM",d:"Large Language Model. Ein KI-Modell, das auf riesigen Textmengen trainiert wurde und menschliche Sprache verstehen und erzeugen kann. Beispiele: Claude, GPT-4, Gemini."},
+  {t:"Prompt",d:"Die Eingabe/Anweisung, die du an ein KI-Modell schickst. Ein guter Prompt enthält Kontext, Aufgabe, Format und Einschränkungen."},
+  {t:"System Prompt",d:"Eine versteckte Anweisung, die der KI vor dem Gespräch mitgegeben wird. Damit definierst du Rolle, Ton und Regeln des KI-Assistenten."},
+  {t:"Token",d:"Die Einheit, in der KI-Modelle Text verarbeiten. Grob gilt: 1 Token ≈ ¾ Wörter. Kosten und Kontextfenster werden in Tokens gemessen."},
+  {t:"Kontextfenster",d:"Die maximale Menge Text (in Tokens), die ein KI-Modell gleichzeitig 'sehen' und berücksichtigen kann. Claude hat ein sehr großes Kontextfenster."},
+  {t:"Few-Shot Prompting",d:"Du gibst der KI einige Beispiele (2–3), wie die Antwort aussehen soll. Die KI erkennt das Muster und setzt es fort."},
+  {t:"Zero-Shot Prompting",d:"Du gibst der KI keine Beispiele – nur die Aufgabe. Die KI versucht es aus dem Kontext heraus zu lösen."},
+  {t:"Chain-of-Thought",d:"Die KI wird gebeten, schrittweise zu denken und den Lösungsweg zu zeigen. Verbessert die Qualität bei komplexen Aufgaben deutlich."},
+  {t:"RAG",d:"Retrieval-Augmented Generation. Die KI wird mit externen Wissensdatenbanken verknüpft, um aktuellere und präzisere Antworten zu geben."},
+  {t:"Fine-Tuning",d:"Ein KI-Modell wird auf spezifischen Daten weitertrainiert, um es für bestimmte Aufgaben zu spezialisieren."},
+  {t:"API",d:"Application Programming Interface. Eine Schnittstelle, über die Programme miteinander kommunizieren. Mit der Claude-API kannst du KI in eigene Apps einbauen."},
+  {t:"Webhook",d:"Eine automatische Benachrichtigung von einem Dienst an einen anderen, wenn ein Ereignis eintritt. Basis für Automatisierungen in Make.com und n8n."},
+  {t:"No-Code",d:"Tools, die es ermöglichen, Software und Automationen zu bauen, ohne Code zu schreiben – per visueller Oberfläche. Beispiele: Make.com, n8n, Zapier."},
+  {t:"Vibecoding",d:"Der Ansatz, mit KI im Dialog zu entwickeln: Du beschreibst was du willst, die KI schreibt den Code, du testest und verfeinerst."},
+  {t:"MVP",d:"Minimum Viable Product. Die einfachste Version eines Produkts, die echten Nutzen bringt und schnell auf den Markt gebracht werden kann."},
+  {t:"B2B SaaS",d:"Business-to-Business Software as a Service. Ein Software-Dienst, der über das Internet bereitgestellt und von Unternehmen abonniert wird."},
+  {t:"Embedding",d:"Darstellung von Text als Zahlenvektor. Damit kann KI Ähnlichkeiten zwischen Texten erkennen. Basis für Suche und RAG-Systeme."},
+  {t:"Halluzination",d:"Wenn ein KI-Modell selbstsicher falsche Informationen erfindet. Wichtig: Immer kritisch prüfen, besonders bei Fakten und Zahlen."},
+  {t:"Temperature",d:"Ein Parameter, der bestimmt, wie kreativ/zufällig die KI-Antworten sind. Niedrig (0.1) = präzise/deterministisch, Hoch (1.0) = kreativ/variabel."},
+  {t:"Inference",d:"Der Vorgang, wenn ein trainiertes KI-Modell eine Eingabe verarbeitet und eine Ausgabe generiert. Das ist was passiert, wenn du promptest."},
+];
+function renderGlossary(filter='') {
+  const f = filter.toLowerCase();
+  const filtered = f ? glossary.filter(g => g.t.toLowerCase().includes(f) || g.d.toLowerCase().includes(f)) : glossary;
+  document.getElementById('glossary-list').innerHTML = filtered.map(g =>
+    `<div class="card" style="margin-bottom:8px">
+      <div style="font-size:13px;font-weight:700;color:var(--accent);font-family:var(--mono);margin-bottom:5px">${g.t}</div>
+      <div style="font-size:12px;color:var(--muted);line-height:1.6">${g.d}</div>
+    </div>`
+  ).join('') || '<div style="color:var(--muted);font-size:13px;padding:12px">Kein Begriff gefunden.</div>';
+}
+function filterGlossary() {
+  renderGlossary(document.getElementById('glossary-search').value);
+}
+
+// =====================
+// SETTINGS
+// =====================
+function loadSettings() {
+  document.getElementById('user-name').value = state.userName || '';
+  document.getElementById('user-level').value = state.userLevel || 'beginner';
+  document.getElementById('user-goal').value = state.userGoal || 'automation';
+}
+function saveName() { state.userName = document.getElementById('user-name').value; save(); }
+function saveLevel() { state.userLevel = document.getElementById('user-level').value; save(); }
+function saveGoalSetting() { state.userGoal = document.getElementById('user-goal').value; save(); }
+function resetXP() { state.xp = 0; save(); updateXPDisplay(); }
+function confirmReset() {
+  openModal('App zurücksetzen?','Alle Daten werden gelöscht – Notizen, XP, Streak und Fortschritt. Das kann nicht rückgängig gemacht werden.', () => {
+    localStorage.removeItem(KEY);
+    location.reload();
+  });
+}
+
+// =====================
+// MODAL
+// =====================
+function openModal(title, body, onConfirm) {
+  document.getElementById('modal-title').textContent = title;
+  document.getElementById('modal-body').textContent = body;
+  document.getElementById('modal-confirm').onclick = () => { closeModal(); onConfirm(); };
+  document.getElementById('modal').classList.add('open');
+}
+function closeModal() { document.getElementById('modal').classList.remove('open'); }
+document.getElementById('modal').addEventListener('click', e => {
+  if (e.target === document.getElementById('modal')) closeModal();
+});
+
+// =====================
+// WEEKLY GOAL
+// =====================
+function loadWeeklyGoal() {
+  const el = document.getElementById('weekly-goal');
+  if (el) el.value = state.weeklyGoal || '';
+}
+
+// =====================
+// INIT
+// =====================
+checkStreak();
+updateXPDisplay();
+renderOverview();
+buildWeekGrid();
+
+// CSS anim for XP toast
+const style = document.createElement('style');
+style.textContent = '@keyframes fadeOut{0%{opacity:1;transform:translateY(0)}80%{opacity:1}100%{opacity:0;transform:translateY(-10px)}}';
+document.body.appendChild(style);
+</script>
+</body>
+</html>
